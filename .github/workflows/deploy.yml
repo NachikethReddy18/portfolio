@@ -9,25 +9,33 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
+      # 1️⃣ Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      # 2️⃣ Set up Flutter
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'stable'
 
+      # 3️⃣ Install dependencies
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Build web (release)
+      # 4️⃣ Build web (release)
+      - name: Build web
         run: |
           flutter build web --release
+          # SPA support for GitHub Pages
           cp build/web/index.html build/web/404.html
           sed -i 's#<base href=\"/\">#<base href=\"./\">#g' build/web/index.html build/web/404.html
 
+      # 5️⃣ Deploy to GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./build/web
+          publish_branch: gh-pages    # branch to publish
+          publish_dir: ./build/web    # folder to publish
+          force_orphan: true          # creates branch if missing
