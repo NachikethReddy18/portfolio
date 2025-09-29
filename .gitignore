@@ -1,0 +1,10 @@
+.dart_tool/
+.packages
+.pub-cache/
+.pub/
+build/
+lib/generated_plugin_registrant.dart
+android/
+ios/
+.vscode/
+.idea/
